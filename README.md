@@ -13,6 +13,7 @@ CLI open source para gerar skills de alta qualidade para Codex e Claude Code usa
   - autoria dos arquivos
   - revisão crítica
   - reparo automático quando necessário
+- Mostra spinner com a etapa atual durante a geração para dar feedback no terminal
 - Valida nome, frontmatter, estrutura, referências e campos específicos de cada alvo
 - Instala a skill gerada por cópia ou symlink
 

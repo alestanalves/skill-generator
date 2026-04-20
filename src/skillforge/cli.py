@@ -1,10 +1,12 @@
 from __future__ import annotations
 
+import sys
 from pathlib import Path
 from typing import Annotated
 
 import typer
 from rich.console import Console
+from rich.progress import Progress, SpinnerColumn, TaskID, TextColumn
 from rich.table import Table
 from typer import Context
 
@@ -26,6 +28,7 @@ from skillforge.validators import detect_skill_roots, validate_skill_directory
 app = typer.Typer(
     invoke_without_command=True,
     help="Generate, validate, and install skills.",
+    rich_markup_mode="rich",
 )
 console = Console()
 
@@ -46,6 +49,40 @@ INTERACTIVE_TARGETS = {
     "geral": RequestedTarget.UNIVERSAL,
     "universal": RequestedTarget.UNIVERSAL,
 }
+
+
+def _supports_live_progress() -> bool:
+    return bool(getattr(sys.stdout, "isatty", lambda: False)())
+
+
+class _GenerationFeedback:
+    def __init__(self, output_console: Console) -> None:
+        self._console = output_console
+        self._progress: Progress | None = None
+        self._task_id: TaskID | None = None
+
+    def __enter__(self) -> "_GenerationFeedback":
+        if _supports_live_progress():
+            self._progress = Progress(
+                SpinnerColumn(spinner_name="dots"),
+                TextColumn("[progress.description]{task.description}"),
+                console=self._console,
+                transient=True,
+            )
+            self._progress.__enter__()
+            self._task_id = self._progress.add_task("Iniciando geração...", total=None)
+        return self
+
+    def __exit__(self, exc_type, exc, exc_tb) -> bool:
+        if self._progress is None:
+            return False
+        return bool(self._progress.__exit__(exc_type, exc, exc_tb))
+
+    def update(self, message: str) -> None:
+        if self._progress is not None and self._task_id is not None:
+            self._progress.update(self._task_id, description=message)
+            return
+        self._console.print(f"[cyan]{message}[/cyan]")
 
 
 def _resolve_brief(brief: str | None, brief_file: Path | None) -> str:
@@ -77,12 +114,17 @@ def _print_issues(title: str, issues) -> None:
 
 
 def _run_generation(config: GenerationConfig) -> None:
-    config.progress_callback = config.progress_callback or (
-        lambda message: console.print(f"[cyan]{message}[/cyan]")
-    )
     forge = SkillForge(model=config.model, reasoning_effort=config.reasoning_effort)
+    original_progress_callback = config.progress_callback
     try:
-        outcome = forge.generate(config)
+        with _GenerationFeedback(console) as feedback:
+            def progress_callback(message: str) -> None:
+                feedback.update(message)
+                if original_progress_callback is not None:
+                    original_progress_callback(message)
+
+            config.progress_callback = progress_callback
+            outcome = forge.generate(config)
     except KeyboardInterrupt:
         console.print("[yellow]Geração cancelada pelo usuário.[/yellow]")
         raise typer.Exit(code=130)
@@ -91,6 +133,8 @@ def _run_generation(config: GenerationConfig) -> None:
     except Exception as exc:
         console.print(f"[red]Erro durante a geração:[/red] {exc}")
         raise typer.Exit(code=1)
+    finally:
+        config.progress_callback = original_progress_callback
 
     plan_table = Table(title="Generation Plan")
     plan_table.add_column("Field")
