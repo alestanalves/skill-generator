@@ -1,6 +1,24 @@
-# Skill Generator
+<p align="center">
+  <img src="./skillgenerator.png" alt="Skill Generator logo" width="320">
+</p>
 
-CLI open source para gerar skills de alta qualidade para Codex e Claude Code usando o OpenAI Agents SDK.
+<h1 align="center">Skill Generator</h1>
+
+<p align="center">
+  CLI open source para gerar skills de alta qualidade para Codex e Claude Code usando o OpenAI Agents SDK.
+</p>
+
+<p align="center">
+  <img alt="Python >= 3.11" src="https://img.shields.io/badge/python-%3E%3D3.11-3776AB?logo=python&logoColor=white">
+  <img alt="Typer CLI" src="https://img.shields.io/badge/CLI-Typer-0C7D9D">
+  <img alt="OpenAI Agents SDK" src="https://img.shields.io/badge/OpenAI-Agents%20SDK-111827?logo=openai&logoColor=white">
+  <img alt="Targets: Codex and Claude Code" src="https://img.shields.io/badge/targets-Codex%20%7C%20Claude%20Code-2563EB">
+  <a href="./LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-green"></a>
+</p>
+
+<p align="center">
+  <code>agent-skills</code> | <code>codex</code> | <code>claude-code</code> | <code>openai-agents-sdk</code> | <code>typer-cli</code>
+</p>
 
 ## O que ele faz
 
