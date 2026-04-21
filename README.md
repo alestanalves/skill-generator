@@ -9,9 +9,9 @@
 </p>
 
 <p align="center">
-  <img alt="Python >= 3.11" src="https://img.shields.io/badge/python-%3E%3D3.11-3776AB?logo=python&logoColor=white">
+  <img alt="Python 3.11+" src="https://img.shields.io/badge/python-3.11%2B-3776AB?logo=python&amp;logoColor=white">
   <img alt="Typer CLI" src="https://img.shields.io/badge/CLI-Typer-0C7D9D">
-  <img alt="OpenAI Agents SDK" src="https://img.shields.io/badge/OpenAI-Agents%20SDK-111827?logo=openai&logoColor=white">
+  <img alt="OpenAI Agents SDK" src="https://img.shields.io/badge/OpenAI-Agents%20SDK-111827?logo=openai&amp;logoColor=white">
   <img alt="Targets: Codex and Claude Code" src="https://img.shields.io/badge/targets-Codex%20%7C%20Claude%20Code-2563EB">
   <a href="./LICENSE"><img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-green"></a>
 </p>
